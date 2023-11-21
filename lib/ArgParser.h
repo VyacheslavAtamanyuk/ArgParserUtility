@@ -7,93 +7,70 @@ namespace ArgumentParser {
 
     class IntArgument {
     public:
-        IntArgument& AddIntArgument(const std::string& value);
-        IntArgument& AddIntArgument(const char short_name, const std::string& value);
-        IntArgument& AddIntArgument(const std::string &value, const std::string& message);
-        int GetIntValue(const std::string& value) const;
-        int GetIntValue(const std::string& value, size_t ind) const;
-        IntArgument& MultiValue();
-        IntArgument& MultiValue(const size_t min_args_count);
-        IntArgument& Default(const int default_value);
-        IntArgument& StoreValues(std::vector<int>& store_int);
-        IntArgument& Positional();
+        IntArgument(const std::string& name);
+        IntArgument(const char short_name, const std::string& name);
+        IntArgument(const std::string& name, const std::string& the_message);
     private:
-        std::vector<bool> is_default;
+        bool is_default = false;
 
-        std::vector<bool> is_store;
-        std::vector<std::vector<int>*> ptrs_to_stores;
+        bool is_store = false;
+        std::vector<int>* ptr_to_store = nullptr;
 
-        std::vector<char> short_keys;
-        std::vector<std::string> keys;
-        std::vector<int> values;
+        char short_key = ' ';
+        std::string key = " ";
+        int value = 0;
 
-        std::vector<bool> is_multi;
-        std::vector<std::vector<int>> multivalues;
-        std::vector<size_t> min_count_of_args;
+        bool is_multi = false;
+        std::vector<int> multivalues;
+        size_t min_count_of_args = 0;
 
-        std::vector<bool> is_message;
-        std::vector<std::string> messages;
+        bool is_message = false;
+        std::string message = " ";
 
-        bool is_positional;
-        size_t count_of_positionals = 0;
-        std::string which_arg_is_positional;
-
-        std::string last_added_argument;
+        bool is_positional = false;
 
         friend class ArgParser;
     };
 
     class FlagArgument {
     public:
-        FlagArgument& AddFlag(const char short_name, const std::string& value);
-        FlagArgument& AddFlag(const char short_name, const std::string& value, const std::string& message);
-        FlagArgument& AddFlag(const std::string& value, const std::string& message);
-        bool GetFlag(const std::string& value) const;
-        FlagArgument& Default(const bool default_bool);
-        FlagArgument& StoreValue(bool &store_bool);
+        FlagArgument(const char short_name, const std::string& name);
+        FlagArgument(const char short_name, const std::string& name, const std::string& the_message);
+        FlagArgument(const std::string& name, const std::string& the_message);
     private:
-        std::vector<bool> is_default;
+        bool is_default = false;
 
-        std::vector<bool> is_store;
-        std::vector<bool*> ptrs_to_store;
+        bool is_store = false;
+        bool* ptr_to_store = nullptr;
 
-        std::vector<char> short_keys;
-        std::vector<std::string> keys;
-        std::vector<bool> values;
+        char short_key = ' ';
+        std::string key = " ";
+        bool value = false;
 
-        std::vector<bool> is_message;
-        std::vector<std::string> messages;
-
-        std::string last_added_argument;
+        bool is_message = false;
+        std::string message = " ";
 
         friend class ArgParser;
     };
 
     class StringArgument {
     public:
-        StringArgument& AddStringArgument(const std::string& value);
-        StringArgument& AddStringArgument(const char short_name, const std::string& value);
-        StringArgument& AddStringArgument(const char short_name, const std::string& value, const std::string& message);
-        std::string GetStringValue(const std::string& value) const;
-        StringArgument& MultiValue();
-        StringArgument& MultiValue(const size_t min_args_count);
-        StringArgument& Default(const std::string& default_string);
-        StringArgument& StoreValue(std::string& store_str);
+        StringArgument(const std::string& name);
+        StringArgument(const char short_name, const std::string& name);
+        StringArgument(const char short_name, const std::string& name, const std::string& the_message);
     private:
-        std::vector<bool> is_default;
+        bool is_default = false;
 
-        std::vector<bool> is_store;
-        std::vector<std::string *> ptrs_to_store;
+        bool is_store = false;
+        std::string* ptr_to_store = nullptr;
 
-        std::vector<char> short_keys;
-        std::vector<std::string> keys;
-        std::vector<std::string> values;
+        char short_key = ' ';
+        std::string key = " ";
+        std::string value = " ";
 
-        std::vector<bool> is_multi;
-        std::vector<std::vector<std::string>> multivalues;
-        std::vector<size_t> min_count_of_args;
-
-        std::string last_added_argument;
+        bool is_multi = false;
+        std::vector<std::string> multivalues;
+        size_t min_count_of_args = 0;
 
         friend class ArgParser;
     };
@@ -103,34 +80,52 @@ namespace ArgumentParser {
         ArgParser(const char* name);
 
         bool Parse(int argc, char **argv);
-        bool Parse(const std::vector<std::string>& values);
+        bool Parse(const std::vector<std::string>& args);
 
-        IntArgument& AddIntArgument(const std::string& value);
-        IntArgument& AddIntArgument(const char short_name, const std::string& value);
-        IntArgument& AddIntArgument(const std::string& value, const std::string& message);
-        int GetIntValue(const std::string& value) const;
-        int GetIntValue(const std::string& value, size_t ind) const;
+        ArgParser& MultiValue();
+        ArgParser& MultiValue(const size_t min_args_count);
+        ArgParser& Default(const int default_val);
+        ArgParser& Default(const char* default_val);
+        ArgParser& Default(const bool default_val);
 
-        FlagArgument& AddFlag(const char short_name, const std::string& value);
-        FlagArgument& AddFlag(const char short_name, const std::string& value, const std::string& message);
-        FlagArgument& AddFlag(const std::string& value, const std::string& message);
-        bool GetFlag(const std::string& value) const;
+        ArgParser& AddIntArgument(const std::string& name);
+        ArgParser& AddIntArgument(const char short_name, const std::string& name);
+        ArgParser& AddIntArgument(const std::string& name, const std::string& the_message);
+        int GetIntValue(const std::string& name) const;
+        int GetIntValue(const std::string& name, size_t ind) const;
+        ArgParser& StoreValues(std::vector<int>& store_name);
+        ArgParser& Positional();
 
-        StringArgument& AddStringArgument(const std::string& value);
-        StringArgument& AddStringArgument(const char short_name, const std::string& value);
-        StringArgument& AddStringArgument(const char short_name, const std::string& value, const std::string& message);
-        std::string GetStringValue(const std::string& value) const;
+        ArgParser& AddFlag(const char short_name, const std::string& name);
+        ArgParser& AddFlag(const char short_name, const std::string& name, const std::string& the_message);
+        ArgParser& AddFlag(const std::string& name, const std::string& the_message);
+        bool GetFlag(const std::string& name) const;
+        ArgParser& StoreValue(bool &store_name);
+
+        ArgParser& AddStringArgument(const std::string& name);
+        ArgParser& AddStringArgument(const char short_name, const std::string& name);
+        ArgParser& AddStringArgument(const char short_name, const std::string& name, const std::string& the_message);
+        std::string GetStringValue(const std::string& name) const;
+        ArgParser& StoreValue(std::string& store_name);
 
         bool Help() const;
         void AddHelp(const char h, const char* help, const char* text);
         std::string HelpDescription() const;
     private:
-        IntArgument class_int_for_parser;
-        FlagArgument class_flag_for_parser;
-        StringArgument class_string_for_parser;
+        std::vector<IntArgument> int_args;
+        std::vector<FlagArgument> flag_args;
+        std::vector<StringArgument> string_args;
 
-        const char* name;
-        bool is_help_is_requested;
+        size_t count_of_int_positionals = 0;
+
+        const char* str_with_last_type = "";
+
+        const char* parser_name = " ";
+        bool is_help_is_requested = false;
         std::vector<const char*> commands_for_help;
+
+        friend class IntArgument;
+        friend class StringArgument;
+        friend class FlagArgument;
     };
 }
